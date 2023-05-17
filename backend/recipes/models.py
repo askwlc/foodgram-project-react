@@ -19,6 +19,7 @@ class Recipe(models.Model):
     tags = models.ManyToManyField('Tag', related_name='recipes', verbose_name='Тег')
 
     class Meta:
+        ordering = ['-pub_date']
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -33,7 +34,7 @@ class Ingredient(models.Model):
 
     class Meta:
         verbose_name = 'Ингредиент'
-        verbose_plural_name = 'Ингредиенты'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return self.name
@@ -41,8 +42,8 @@ class Ingredient(models.Model):
 
 class RecipeIngredient(models.Model):
     """Промежуточная модель Рецепт - Ингредиент"""
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients')
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='recipes')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredients')
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, verbose_name='Ингредиент')
     amount = models.FloatField(
         validators=[MinValueValidator(1, message='Количество ингредиентов должно быть больше 1')],
         verbose_name='Количество ингредиента')
@@ -78,6 +79,7 @@ class Favorite(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'recipe'], name='unique_recipe_in_favorites')
         ]
+
 
 class Cart(models.Model):
     """Модель корзины для покупок"""
