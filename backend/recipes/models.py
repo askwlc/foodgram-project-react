@@ -11,6 +11,7 @@ class Recipe(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название рецепта')
     text = models.TextField(verbose_name='Описание рецепта')
     image = models.ImageField(upload_to='recipes/images', blank=True, null=True)
+    pub_date = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Дата публикации рецепта')
     cooking_time = models.IntegerField(
         validators=[MinValueValidator(1, message='Время приготовления должно быть больше 1 минуты.')],
         verbose_name='Время приготовления')
