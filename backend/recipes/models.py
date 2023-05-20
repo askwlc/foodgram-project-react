@@ -54,6 +54,9 @@ class RecipeIngredient(models.Model):
             UniqueConstraint(fields=['recipe', 'ingredient'], name='unique_ingredient_for_recipe')
         ]
 
+    def __str__(self):
+        return f'{self.ingredient} для {self.recipe}'
+
 
 class Tag(models.Model):
     """Модель тегов"""
@@ -93,3 +96,6 @@ class Cart(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'recipe'], name='unique_recipe_in_cart')
         ]
+
+    def __str__(self):
+        return f'{self.user} - {self.recipe}'
