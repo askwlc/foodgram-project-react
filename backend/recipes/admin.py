@@ -17,9 +17,11 @@ class IngredientAdmin(admin.ModelAdmin):
     list_filter = ('name',)
 
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'color',)
+    list_filter = ('name',)
+
+
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Tag)
-admin.site.register(RecipeIngredient)
-admin.site.register(Favorite)
-admin.site.register(Cart)
+admin.site.register(Tag, TagAdmin)
