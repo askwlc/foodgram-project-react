@@ -7,6 +7,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     """Обрабатывает модель User."""
+
     class Meta:
         model = User
         fields = ['email', 'id', 'username', 'first_name', 'last_name']
@@ -21,6 +22,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     """Обрабатывает создание токенов JWT."""
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
