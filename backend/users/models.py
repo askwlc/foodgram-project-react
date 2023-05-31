@@ -42,3 +42,6 @@ class Follow(models.Model):
         if self.user == self.author:
             raise ValueError("Нельзя подписываться на себя")
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.user.username} подписан на {self.author.username}'

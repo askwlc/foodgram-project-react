@@ -45,7 +45,8 @@ class Ingredient(models.Model):
 class RecipeIngredient(models.Model):
     """Промежуточная модель Рецепт - Ингредиент"""
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredients')
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, verbose_name='Ингредиент')
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
+                                   verbose_name='Ингредиент', related_name='recipe_ingredients')
     amount = models.FloatField(
         validators=[MinValueValidator(1, message='Количество ингредиентов должно быть больше 0')],
         verbose_name='Количество ингредиента')
@@ -88,8 +89,8 @@ class Favorite(models.Model):
 
 class Cart(models.Model):
     """Модель корзины для покупок"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='in_cart')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_recipe')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='cart_recipe')
 
     class Meta:
         verbose_name = 'Рецепт в корзине'
