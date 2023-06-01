@@ -103,9 +103,9 @@ class FollowSerializer(serializers.ModelSerializer):
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Сериализатор связной модели RecipeIngredient."""
-    id = serializers.IntegerField()
-    name = serializers.CharField(read_only=True)
-    measurement_unit = serializers.CharField(read_only=True)
+    id = serializers.IntegerField(source='ingredient.id')
+    name = serializers.CharField(source='ingredient.name', read_only=True)
+    measurement_unit = serializers.CharField(source='ingredient.measurement_unit', read_only=True)
 
     class Meta:
         model = RecipeIngredient
@@ -165,7 +165,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         ingredients = []
         for ingredient in new_ingredients:
             try:
-                ingredient_instance = Ingredient.objects.get(id=ingredient["id"])
+                ingredient_instance = Ingredient.objects.get(id=ingredient["ingredient"]["id"])
             except ObjectDoesNotExist:
                 raise serializers.ValidationError('Ингредиент с таким id не существует.')
             recipe_ingredient = RecipeIngredient(
@@ -200,11 +200,11 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     def validate(self, value):
-        """Валидация поля ингредиентов при создании рецепта."""
-        ingredients = value.get('ingredients', [])
-        if not ingredients:
+        """Валидация данных при создании и обновлении рецепта."""
+        ingredients = value.get('ingredients')
+        if ingredients is None:
             raise serializers.ValidationError(
-                'Необходимо указать как минимум один ингредиент.'
+                'Список ингредиентов не может быть пустым.'
             )
         ingredients_id_list = []
         for item in ingredients:
@@ -212,7 +212,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'Количество ингредиента не может быть равным нулю.'
                 )
-            ingredient_id = item['id']
+            # Access `ingredient.id` instead of just `id`
+            ingredient_id = item.get('ingredient', {}).get('id')
             if ingredient_id in ingredients_id_list:
                 raise serializers.ValidationError(
                     'Указано несколько одинаковых ингредиентов.'

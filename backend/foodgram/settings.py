@@ -1,8 +1,11 @@
 import os
-from datetime import timedelta
+from dotenv import load_dotenv
+
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(os.path.join(BASE_DIR.parent, 'infra/.env'), verbose=True)
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-2&mv%lb9v2)7!!q%7)8nef@#4&+65-$=@uox5ybo6+v@7!nj0p')
 
@@ -23,12 +26,14 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
     'rest_framework.authtoken',
-    'djoser'
+    'djoser',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -37,6 +42,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
+CORS_ALLOW_ALL_ORIGINS = True
 
 TEMPLATES = [
     {
@@ -57,22 +63,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+   'default': {
+       'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+       'NAME': os.environ.get('POSTGRES_DB', BASE_DIR / 'db.sqlite3'),
+       'USER': os.environ.get('POSTGRES_USER'),
+       'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+       'HOST': os.environ.get('DB_HOST'),
+       'PORT': os.environ.get('DB_PORT'),
+   }
 }
 
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-#             'NAME': os.getenv('DB_NAME', default='postgres'),
-#             'USER': os.getenv('POSTGRES_USER', default='postgres'),
-#             'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='1234567890'),
-#             'HOST': os.getenv('DB_HOST', default='db'),
-#             'PORT': os.getenv('DB_PORT', default=5432)
-#         }
-#     }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -99,8 +100,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-
-
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
@@ -115,7 +114,6 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     }
 }
-
 
 LANGUAGE_CODE = 'ru'
 

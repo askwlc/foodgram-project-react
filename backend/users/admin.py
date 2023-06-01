@@ -4,8 +4,8 @@ from .models import User, Follow
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'password',)
-    list_filter = ('username',)
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name',)
+    list_filter = ('email', 'username',)
 
 
 class FollowAdmin(admin.ModelAdmin):
