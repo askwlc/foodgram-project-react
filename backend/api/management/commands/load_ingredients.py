@@ -1,20 +1,16 @@
 import os
-import django
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.foodgram.settings')
-
-django.setup()
-
 import csv
 
+import django
 from django.conf import settings
-
-
 from django.core.management import BaseCommand
 from django.db.utils import IntegrityError
 
 from recipes.models import Ingredient
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.foodgram.settings')
+
+django.setup()
 
 
 class Command(BaseCommand):
@@ -23,8 +19,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         try:
             with open(
-                f"{settings.BASE_DIR.parent}/data/ingredients.csv", "r",
-                encoding="utf-8"
+                    f"{settings.BASE_DIR.parent}/data/ingredients.csv", "r",
+                    encoding="utf-8"
             ) as csv_file:
                 reader = csv.reader(csv_file)
                 objects = (

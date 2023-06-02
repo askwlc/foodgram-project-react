@@ -1,6 +1,7 @@
-from django.contrib.auth.models import Group
 from django.contrib import admin
-from .models import User, Follow
+from django.contrib.auth.models import Group
+
+from .models import Follow, User
 
 
 class UserAdmin(admin.ModelAdmin):

@@ -1,20 +1,23 @@
+from django.db import IntegrityError
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db import IntegrityError
-from django.db.models import Sum
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import viewsets, status, permissions
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
-from api.filters import RecipeFilter, CustomSearchFilter
+from api.filters import CustomSearchFilter, RecipeFilter
 from api.paginators import PageLimitPagination
 from api.permissions import IsAuthorOrAdminOrReadOnly
-from api.serializers import TagSerializer, IngredientSerializer, FollowSerializer, FavoriteSerializer, \
-    RecipeListSerializer, RecipeCreateSerializer, CartSerializer
-from recipes.models import Recipe, Tag, Ingredient, Favorite, Cart, RecipeIngredient
+from api.serializers import (CartSerializer, FavoriteSerializer,
+                             FollowSerializer, IngredientSerializer,
+                             RecipeCreateSerializer, RecipeListSerializer,
+                             TagSerializer)
+from recipes.models import (Cart, Favorite, Ingredient, Recipe,
+                            RecipeIngredient, Tag)
 from users.models import Follow, User
 
 
@@ -51,7 +54,9 @@ class FollowAPIView(APIView):
     def post(self, request, author_id):
         author = get_object_or_404(User, id=author_id)
         if request.user == author:
-            return self.response_error('Вы не можете подписаться на самого себя.')
+            return self.response_error(
+                'Вы не можете подписаться на самого себя.'
+            )
 
         if Follow.objects.filter(author=author, user=request.user).exists():
             return self.response_error('Вы уже подписаны на этого автора.')
@@ -67,14 +72,18 @@ class FollowAPIView(APIView):
     def delete(self, request, author_id):
         author = get_object_or_404(User, id=author_id)
 
-        if not Follow.objects.filter(author=author, user=request.user).exists():
+        if not Follow.objects.filter(
+                author=author, user=request.user).exists():
             return self.response_error('Вы еще не подписаны на этого автора.')
 
         Follow.objects.filter(author=author, user=request.user).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def response_error(self, message):
-        return Response({'errors': message}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {'errors': message},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -101,21 +110,32 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         user = request.user
         if request.method == 'POST':
-            shoping_cart, created = Cart.objects.get_or_create(user=user, recipe=recipe)
+            shoping_cart, created = Cart.objects.get_or_create(
+                user=user, recipe=recipe
+            )
             if created:
                 serializer = CartSerializer(
                     shoping_cart, context={'request': request}
                 )
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_201_CREATED
+                )
             else:
-                return Response({'detail': 'Рецепт уже в корзине.'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'detail': 'Рецепт уже в корзине.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         if request.method == 'DELETE':
             delete_shoping_cart = Cart.objects.filter(
                 user=user, recipe=recipe)
             if delete_shoping_cart.exists():
                 delete_shoping_cart.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response({'detail': 'Рецепта нет в корзине.'},status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'detail': 'Рецепта нет в корзине.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(
@@ -175,4 +195,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-

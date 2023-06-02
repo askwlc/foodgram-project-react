@@ -2,8 +2,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, status
 
-from recipes.models import Tag, Recipe, Ingredient, Favorite, RecipeIngredient, Cart
-from users.models import User, Follow
+from recipes.models import (Cart, Favorite, Ingredient, Recipe,
+                            RecipeIngredient, Tag)
+from users.models import Follow, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,7 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'password', 'is_subscribed')
+        fields = ('email', 'id', 'username', 'first_name',
+                  'last_name', 'password', 'is_subscribed')
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ("is_subscribed",)
 
@@ -104,8 +106,13 @@ class FollowSerializer(serializers.ModelSerializer):
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Сериализатор связной модели RecipeIngredient."""
     id = serializers.IntegerField(source='ingredient.id')
-    name = serializers.CharField(source='ingredient.name', read_only=True)
-    measurement_unit = serializers.CharField(source='ingredient.measurement_unit', read_only=True)
+    name = serializers.CharField(
+        source='ingredient.name',
+        read_only=True
+    )
+    measurement_unit = serializers.CharField(
+        source='ingredient.measurement_unit', read_only=True
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -116,7 +123,9 @@ class RecipeListSerializer(serializers.ModelSerializer):
     """Сериализатор просмотра рецептов."""
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
-    ingredients = RecipeIngredientSerializer(many=True, source='recipe_ingredients')
+    ingredients = RecipeIngredientSerializer(
+        many=True, source='recipe_ingredients'
+    )
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
 
@@ -158,16 +167,25 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('author',)
 
     def to_representation(self, instance):
-        return RecipeListSerializer(instance, context=self.context).data
+        return RecipeListSerializer(
+            instance,
+            context=self.context).data
 
-    def create_new_ingredients(self, new_recipe, new_ingredients):
-        """Вспомогательный метод для создания объектов модели RecipeIngredient."""
+    def create_new_ingredients(
+            self, new_recipe,
+            new_ingredients):
+        """Вспомогательный метод для создания
+        объектов модели RecipeIngredient.
+        """
         ingredients = []
         for ingredient in new_ingredients:
             try:
-                ingredient_instance = Ingredient.objects.get(id=ingredient["ingredient"]["id"])
+                ingredient_instance = Ingredient.objects.get(
+                    id=ingredient["ingredient"]["id"])
             except ObjectDoesNotExist:
-                raise serializers.ValidationError('Ингредиент с таким id не существует.')
+                raise serializers.ValidationError(
+                    'Ингредиент с таким id не существует.'
+                )
             recipe_ingredient = RecipeIngredient(
                 recipe=new_recipe,
                 ingredient=ingredient_instance,

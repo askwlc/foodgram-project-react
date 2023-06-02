@@ -1,13 +1,16 @@
 import os
-from dotenv import load_dotenv
-
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR.parent, 'infra/.env'), verbose=True)
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-2&mv%lb9v2)7!!q%7)8nef@#4&+65-$=@uox5ybo6+v@7!nj0p')
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-2&mv%lb9v2)7!!q%7)8nef@#4&+65-$=@uox5ybo6+v@7!nj0p'
+)
 
 DEBUG = True
 
@@ -63,17 +66,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
-   'default': {
-       'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
-       'NAME': os.environ.get('POSTGRES_DB', BASE_DIR / 'db.sqlite3'),
-       'USER': os.environ.get('POSTGRES_USER'),
-       'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-       'HOST': os.environ.get('DB_HOST'),
-       'PORT': os.environ.get('DB_PORT'),
-   }
+    'default': {
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('POSTGRES_DB', BASE_DIR / 'db.sqlite3'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    }
 }
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
