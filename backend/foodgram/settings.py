@@ -9,7 +9,7 @@ load_dotenv(os.path.join(BASE_DIR.parent, 'infra/.env'), verbose=True)
 
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
-    'django-insecure-2&mv%lb9v2)7!!q%7)8nef@#4&+65-$=@uox5ybo6+v@7!nj0p'
+    'e$8i)#vwo-kw#!d+6(oqsn48i!szok#lc03w)%f7fg+^wvi4u*'
 )
 
 DEBUG = True

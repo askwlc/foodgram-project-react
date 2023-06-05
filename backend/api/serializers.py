@@ -179,19 +179,17 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         """
         ingredients = []
         for ingredient in new_ingredients:
-            try:
-                ingredient_instance = Ingredient.objects.get(
-                    id=ingredient["ingredient"]["id"])
-            except ObjectDoesNotExist:
-                raise serializers.ValidationError(
-                    'Ингредиент с таким id не существует.'
-                )
+            ingredient_id = ingredient.get('ingredient', {}).get('id')
+            if not Ingredient.objects.filter(id=ingredient_id).exists():
+                raise serializers.ValidationError(f'Ингредиент с id {ingredient_id} не существует.')
+
             recipe_ingredient = RecipeIngredient(
                 recipe=new_recipe,
-                ingredient=ingredient_instance,
+                ingredient_id=ingredient_id,
                 amount=ingredient["amount"],
             )
             ingredients.append(recipe_ingredient)
+
         RecipeIngredient.objects.bulk_create(ingredients)
 
     def create(self, validated_data):
