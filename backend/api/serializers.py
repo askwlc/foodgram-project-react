@@ -180,8 +180,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         ingredients = []
         for ingredient in new_ingredients:
             ingredient_id = ingredient.get('ingredient', {}).get('id')
-            if not Ingredient.objects.filter(id=ingredient_id).exists():
-                raise serializers.ValidationError(f'Ингредиент с id {ingredient_id} не существует.')
 
             recipe_ingredient = RecipeIngredient(
                 recipe=new_recipe,

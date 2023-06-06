@@ -101,9 +101,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         user = request.user
         if request.method == 'POST':
-            instance, created = model.objects.get_or_create(
-                user=user, recipe=recipe
-            )
+            instance, created = model.objects.get_or_create(user=user, recipe=recipe)
             if created:
                 serializer = serializer_class(
                     instance, context={'request': request}
@@ -112,21 +110,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     serializer.data,
                     status=status.HTTP_201_CREATED
                 )
-            else:
-                return Response(
-                    {'detail': 'Уже существует.'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
 
-        else:
-            instance = model.objects.filter(user=user, recipe=recipe)
-            if instance.exists():
-                instance.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
-                {'detail': 'Не существует.'},
+                {'detail': 'Уже существует.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        instance = model.objects.filter(user=user, recipe=recipe)
+        if instance.exists():
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(
+            {'detail': 'Не существует.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(
