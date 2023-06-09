@@ -84,7 +84,6 @@ jobs:
 #            sudo docker-compose exec backend python manage.py load_ingredients
 
 
-
   send_message:
     runs-on: ubuntu-latest
     needs: deploy
