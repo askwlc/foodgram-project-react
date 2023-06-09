@@ -22,7 +22,7 @@ services:
 
   frontend:
     build:
-      context: askwlc/foodgram_frontend
+      context: askwlc/foodgram_frontend:v1.06.2023
       dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
