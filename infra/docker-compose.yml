@@ -21,9 +21,7 @@ services:
     container_name: foodgram_web
 
   frontend:
-    build:
-      context: askwlc/foodgram_frontend:v1.06.2023
-      dockerfile: Dockerfile
+    image: askwlc/foodgram_frontend:v1.06.2023
     volumes:
       - ../frontend/:/app/result_build/
 
