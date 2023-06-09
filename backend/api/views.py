@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -101,7 +100,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         user = request.user
         if request.method == 'POST':
-            instance, created = model.objects.get_or_create(user=user, recipe=recipe)
+            instance, created = model.objects.get_or_create(
+                user=user, recipe=recipe
+            )
             if created:
                 serializer = serializer_class(
                     instance, context={'request': request}
