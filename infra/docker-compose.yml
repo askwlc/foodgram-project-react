@@ -8,6 +8,11 @@ services:
     env_file:
       - .env
 
+  frontend:
+    image: askwlc/foodgram_frontend:v1.06.2023
+    volumes:
+      - ../frontend/:/app/result_build/
+
   backend:
     image: askwlc/foodgram:latest
     restart: always
@@ -20,10 +25,6 @@ services:
       - ./.env
     container_name: foodgram_web
 
-  frontend:
-    image: askwlc/foodgram_frontend:v1.06.2023
-    volumes:
-      - ../frontend/:/app/result_build/
 
   nginx:
     image: nginx:1.19.3
@@ -37,7 +38,6 @@ services:
       - ./docs/:/usr/share/nginx/html/api/docs/
     depends_on:
       - backend
-      - frontend
 
 volumes:
   static_value:
