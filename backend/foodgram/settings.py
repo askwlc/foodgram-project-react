@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get(
     'e$8i)#vwo-kw#!d+6(oqsn48i!szok#lc03w)%f7fg+^wvi4u*'
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
 
