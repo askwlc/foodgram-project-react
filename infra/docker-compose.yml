@@ -9,7 +9,7 @@ services:
       - .env
 
   frontend:
-    image: askwlc/foodgram_frontend:v1.06.2023
+    image: askwlc/foodgram_frontend:latest
     volumes:
       - ./frontend/:/app/result_build/
 
