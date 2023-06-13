@@ -1,6 +1,7 @@
 version: '3.3'
 services:
   db:
+    container_name: db
     image: postgres:13.0-alpine
     restart: always
     volumes:
@@ -9,6 +10,7 @@ services:
       - .env
 
   frontend:
+    container_name: frontend
     image: askwlc/foodgram_frontend:latest
     volumes:
       - ./frontend/:/app/result_build/
@@ -23,9 +25,10 @@ services:
       - db
     env_file:
       - ./.env
-    container_name: foodgram_web
+    container_name: backend
 
   nginx:
+    container_name: nginx
     image: nginx:1.19.3
     ports:
       - "80:80"
@@ -37,7 +40,6 @@ services:
       - ./docs/:/usr/share/nginx/html/api/docs/
     depends_on:
       - backend
-      - frontend
 
 volumes:
   static_value:
