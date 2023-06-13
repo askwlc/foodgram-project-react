@@ -11,7 +11,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: mcevaf/frontend:latest
+    image: askwlc/frontend:latest
     volumes:
       - ./frontend/:/app/result_build/
 
