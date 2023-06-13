@@ -11,7 +11,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: askwlc/frontend:latest
+    image: askwlc/foodgram_frontend:latest
     volumes:
       - ./frontend/:/app/result_build/
 
