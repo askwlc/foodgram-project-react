@@ -25,7 +25,6 @@ services:
       - ./.env
     container_name: foodgram_web
 
-
   nginx:
     image: nginx:1.19.3
     ports:
