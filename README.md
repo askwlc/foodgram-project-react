@@ -1,4 +1,4 @@
-## Проект Foodgram
+## Проект Foodgram 
 
 ![workflow](https://github.com/askwlc/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
